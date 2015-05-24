@@ -42,11 +42,9 @@ public class ChatClient extends JFrame {
 	//private final JButton outJbt = new JButton("退出");
 	//private Thread myThread = new Thread(new ReadMes(Socket );
 	private Socket thisSocket;
-	
 	/**
 	 * 接受服务器信息
 	 */
-	
 	DataOutputStream toServer = null;
 	DataInputStream fromServer = null;
 
@@ -152,8 +150,10 @@ public class ChatClient extends JFrame {
 	}
 
 	/**
+	 * 
 	 * 聊天界面以及构造函数
 	 */
+
 
 	public ChatClient(String ipAString) {
 
@@ -173,10 +173,8 @@ public class ChatClient extends JFrame {
 			}
 		
 		});
-		nickName.setBackground(Color.WHITE);
 		
 		nickName.setColumns(10);//输入昵称的文本框
-		//nickName.setText(nickName);
 		
 		JPanel p = new JPanel();
 
@@ -204,6 +202,14 @@ public class ChatClient extends JFrame {
 
 		tabbedPane.addTab("聊天界面", null, chatWindow, null);
 		chatWindow.setLayout(new BorderLayout(0, 0));
+
+		chatWindow.add(chatOperation, BorderLayout.SOUTH);
+		chatOperation.setLayout(new BorderLayout(0, 0));
+		chatOperation.add(jbtOK, BorderLayout.EAST);
+		chatOperation.add(jtf, BorderLayout.CENTER);
+		jtf.setHorizontalAlignment(JTextField.LEFT);
+		JLabel label = new JLabel("在右边输入您的信息");
+		chatOperation.add(label, BorderLayout.WEST);
 		
 		//chatOperation.add(outJbt, BorderLayout.SOUTH);
 
@@ -218,37 +224,29 @@ public class ChatClient extends JFrame {
 		scrollPane_1.setViewportView(jta);
 
 		jta.setEditable(false);
-		
-				chatWindow.add(chatOperation, BorderLayout.SOUTH);
-				chatOperation.setLayout(new BorderLayout(0, 0));
-				chatOperation.add(jbtOK, BorderLayout.EAST);
-				chatOperation.add(jtf, BorderLayout.CENTER);
-				jtf.setHorizontalAlignment(JTextField.LEFT);
-				JLabel label = new JLabel("在右边输入您的信息");
-				chatOperation.add(label, BorderLayout.WEST);
 
 		tabbedPane.addTab("聊天记录", null, chatHistoryPanel, null);
 		chatHistoryPanel.setLayout(new BorderLayout(0, 0));
+
+		chatHistoryPanel.add(button, BorderLayout.SOUTH);
+		button.addActionListener(new ActionListener() {//为清空聊天记录按钮添加方法
+			public void actionPerformed(ActionEvent e) {
+				try {
+					DataOutputStream deleteFile = new DataOutputStream(
+							new FileOutputStream(output));
+
+					deleteFile.writeUTF("");
+					chatHistory.setText("清空成功！\n");
+				} catch (IOException e1) {
+					//e1.printStackTrace();
+					System.err.println(e1+"\n这里是button.addActionListener()");
+				}
+			}
+		});
 		
 		chatHistoryPanel.add(scrollPane_2, BorderLayout.CENTER);
 		scrollPane_2.setViewportView(chatHistory);
 		chatHistory.setEditable(false);
-		
-				chatHistoryPanel.add(button, BorderLayout.SOUTH);
-				button.addActionListener(new ActionListener() {//为清空聊天记录按钮添加方法
-					public void actionPerformed(ActionEvent e) {
-						try {
-							DataOutputStream deleteFile = new DataOutputStream(
-									new FileOutputStream(output));
-
-							deleteFile.writeUTF("");
-							chatHistory.setText("清空成功！\n");
-						} catch (IOException e1) {
-							//e1.printStackTrace();
-							System.err.println(e1+"\n这里是button.addActionListener()");
-						}
-					}
-				});
 
 	}
 
@@ -304,7 +302,53 @@ public class ChatClient extends JFrame {
 		
 	}
 
-	
+	public static void main(String[] args) {
+		try {
+			UIManager
+					.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Throwable e) {
+			//e.printStackTrace();
+			System.err.println(e+"\n这里是UI界面方法");
+		}
+		// -----------出于无奈只能放在主函数的登陆界面-----------------
+		final JFrame login = new JFrame();
+
+		JButton jbtOK = new JButton("连接");
+		JButton jbtCancel = new JButton("关闭");
+		final JTextField jtfAddress = new JTextField(15);
+		jtfAddress.setText("localhost");
+
+		JPanel panel = new JPanel();
+		panel.add(new JLabel("输入服务器地址："));
+		panel.add(jtfAddress);
+		panel.add(jbtOK);
+		panel.add(jbtCancel);
+
+		login.getContentPane().add(panel);
+
+		jbtOK.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				ChatClient chatClient = new ChatClient(jtfAddress.getText()
+						.trim());
+				chatClient.startWork(); //开启聊天室界面
+				
+				login.setVisible(false);
+			}
+		});
+		jbtCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+
+		login.setTitle("请登录");
+		login.setSize(300, 120);
+		login.setLocation(200, 100);
+		login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		login.setVisible(true);
+		// -----------出于无奈只能放在主函数的登陆界面-----------------
+
+	}
 
 }
-

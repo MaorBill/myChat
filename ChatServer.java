@@ -16,7 +16,6 @@ public class ChatServer extends JFrame {
 
 		getContentPane().setLayout(new BorderLayout());// 建立一个Border布局
 		getContentPane().add(new JScrollPane(jta), BorderLayout.CENTER);// 将文本显示框加到这个面板上
-		
 		// 窗口属性的一些设置
 		setTitle("Server");
 		setSize(500, 300);
@@ -34,12 +33,14 @@ public class ChatServer extends JFrame {
 				socket = serverSocket.accept();// 等待客户端的接入
 				count++;// 接入后客户端数目增加
 				isConnect[count] = true;
-				
 				// 显示客户端的一些信息
-				jta.append("\n开始接受客户端 <" + count + ">传输数据 , 时间为 " + new Date() + '\n');
+				jta.append("\n开始接受客户端 <" + count + ">传输数据 , 时间为 " + new Date()
+						+ '\n');
 				InetAddress inetAddress = socket.getInetAddress();
-				jta.append("客户端< " + count + ">的主机名字是 " + inetAddress.getHostName() + "\n");
-				jta.append("客户端 <" + count + ">的IP是 " + inetAddress.getHostAddress() + "\n");
+				jta.append("客户端< " + count + ">的主机名字是 "
+						+ inetAddress.getHostName() + "\n");
+				jta.append("客户端 <" + count + ">的IP是 "
+						+ inetAddress.getHostAddress() + "\n");
 
 				// 将每一个连接到该服务器的客户端，加到List中
 
